@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1789908707">
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="blob-super blob-1"></div>
+        <div class="blob-super blob-2"></div>
+        <div class="blob-super blob-3"></div>
+    </div>
+    
+    <nav class="top-nav glass-panel">
+        <div class="nav-brand">
+            <img src="../cipher-studio-icon.svg" class="logo-svg" alt="Cipher Studio" style="width: 32px; height: 32px; filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5));" />
+            <span class="brand-text">Cipher <span class="pro-badge">PRO v1.0</span></span>
+        </div>
+        <div class="nav-actions">
+            <button type="button" id="open-main-folder-btn" class="nav-btn hidden">📂 View Output</button>
+        </div>
+    </nav>
+
+
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboard-screen" class="app-wrapper hidden">
+        <div class="dashboard-container" style="position: relative;">
+            <div class="theme-selector" style="position: absolute; top: -40px; right: 0; display: flex; gap: 8px;">
+                <button class="theme-btn" data-theme="default" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);" title="Default Purple"></button>
+                <button class="theme-btn" data-theme="cyberpunk" style="background: linear-gradient(135deg, #ec4899, #06b6d4);" title="Cyberpunk"></button>
+                <button class="theme-btn" data-theme="matrix" style="background: linear-gradient(135deg, #10b981, #3b82f6);" title="Matrix"></button>
+                <button class="theme-btn" data-theme="ruby" style="background: linear-gradient(135deg, #ef4444, #f59e0b);" title="Ruby"></button>
+            </div>
+            
+            <h1 class="dashboard-title">Select a Tool</h1>
+            <p class="dashboard-subtitle">Choose the processing engine you want to use.</p>
+            
+            <div class="tool-cards-grid">
+                <div class="tool-card" data-tool="auto">
+                    <div class="tool-icon">⚙️</div>
+                    <div class="tool-name">Auto Split</div>
+                    <div class="tool-desc">Automatically split videos into segments.</div>
+                </div>
+                
+                <div class="tool-card" data-tool="manual">
+                    <div class="tool-icon">✂️</div>
+                    <div class="tool-name">Manual Cut</div>
+                    <div class="tool-desc">Extract precise custom timestamp clips.</div>
+                </div>
+                
+                <div class="tool-card" data-tool="watermark">
+                    <div class="tool-icon">💧</div>
+                    <div class="tool-name">Watermark / Logo</div>
+                    <div class="tool-desc">Overlay up to 3 logos on your videos.</div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN (WORKSPACE) -->
+    <div id="workspace-screen" class="app-wrapper hidden">
+        
+        <div class="workspace-header">
+            <button class="btn-back" id="back-to-dashboard-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <h2 id="current-tool-title" style="margin:0; font-size: 1.5rem; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tool Name</h2>
+            <div style="width: 130px;"></div> <!-- Spacer for centering -->
+        </div>
+
+        <div class="layout-grid">
+
+            <!-- QUEUE PANEL -->
+            <div class="queue-panel">
+                <div class="card glass-panel queue-card flex-col">
+                    <div class="queue-header">
+                        <h2>Video Queue</h2>
+                        <button class="btn-action" id="add-video-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z"/>
+                                <rect x="3" y="6" width="12" height="12" rx="2" ry="2"/>
+                                <line x1="9" y1="9" x2="9" y2="15"/>
+                                <line x1="6" y1="12" x2="12" y2="12"/>
+                            </svg>
+                            <span>Add Videos</span>
+                        </button>
+                    </div>
+                    
+                    <div class="queue-list" id="video-queue-list">
+                        <div class="empty-state">No videos added yet.</div>
+                    </div>
+
+                    <div class="queue-footer">
+                        <div class="status-panel">
+                            <div class="status-top">
+                                <span id="status-text">Idle</span>
+                                <span id="eta-text">ETA: --:--</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="action-buttons" style="flex-direction: column; gap: 0.5rem;">
+                            <button id="select-output-btn" class="btn-action">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                                </svg>
+                                <span>Select Output Folder</span>
+                            </button>
+                            <button id="start-btn" class="btn btn-generate glow-button">▶ START PROCESSING</button>
+                            <button id="cancel-btn" class="btn btn-danger hidden">CANCEL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Configuration -->
+            <div class="config-panel-container flex-col" style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+
+
+                <div class="config-panel" style="flex: 1; overflow-y: auto;">
+                    
+                    <!-- AUTO SPLIT SETTINGS -->
+                    <div id="config-auto" style="display: contents;">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Basic Settings</h2>
+                            <div class="grid-2-col">
+                                <div class="input-group">
+                                    <label>Clip Duration (s)</label>
+                                    <input type="number" id="cfg-duration" value="30">
+                                </div>
+                                <div class="input-group">
+                                    <label>Overlap (s)</label>
+                                    <input type="number" id="cfg-overlap" value="0">
+                                </div>
+                                <div class="input-group">
+                                    <label>Variance (+/- s)</label>
+                                    <input type="number" step="0.1" id="cfg-variance" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Ignore Intros & Outros</h2>
+                            <div class="grid-2-col">
+                                <div class="input-group">
+                                    <label>Ignore Start (s)</label>
+                                    <input type="number" id="cfg-ignore-start" value="0">
+                                </div>
+                                <div class="input-group">
+                                    <label>Ignore End (s)</label>
+                                    <input type="number" id="cfg-ignore-end" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END config-auto -->
+
+                    <!-- TRANSCRIBER SETTINGS -->
+                    <div id="config-transcriber" class="hidden" style="display: contents;">
+                        <div class="card glass-panel" style="margin-bottom: 1rem;">
+                            <h2 class="card-title">Transcription Settings</h2>
+                            <div class="grid-2-col">
+                                <div class="input-group">
+                                    <label>Language</label>
+                                    <select id="cfg-ts-lang">
+                                        <option value="auto">Auto Detect</option>
+                                        <option value="en">English</option>
+                                        <option value="ur">Urdu</option>
+                                        <option value="hi">Hindi</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Output Format</label>
+                                    <select id="cfg-ts-format">
+                                        <option value="timestamped">Timestamped Transcript (Recommended)</option>
+                                        <option value="srt">.SRT Subtitles</option>
+                                        <option value="txt">Plain Text</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Timestamp Style</label>
+                                    <select id="cfg-ts-style">
+                                        <option value="word">Word Timestamps</option>
+                                        <option value="sentence">Sentence Timestamps</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Words per Timecode</label>
+                                    <select id="cfg-ts-words">
+                                        <option value="small">Small — up to 4 words</option>
+                                        <option value="medium" selected>Medium — up to 8 words</option>
+                                        <option value="large">Large — up to 12 words</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Toggle switch for Speaker Detection -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div>
+                                    <span style="font-size: 0.95rem; font-weight: 500;">Speaker Detection</span>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 8px;">(requires diarization API)</span>
+                                </div>
+                                <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                                    <input type="checkbox" id="cfg-ts-speaker" style="opacity: 0; width: 0; height: 0;">
+                                    <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px;"></span>
+                                    <span style="position: absolute; content: ''; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- API Settings Card -->
+                        <div class="card glass-panel" style="margin-bottom: 2rem;">
+                            <h2 class="card-title">Transcription API (Optional)</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.85rem;">Use cloud APIs for ultra-fast transcription instead of local Whisper.</p>
+                            <div class="input-group">
+                                <label>Provider</label>
+                                <select id="cfg-ts-api-provider">
+                                    <option value="local">Local Whisper (No API needed)</option>
+                                    <option value="groq">Groq (Ultra-fast Cloud)</option>
+                                    <option value="deepgram">Deepgram (High Accuracy & Diarization)</option>
+                                </select>
+                            </div>
+                            <div class="input-group" id="cfg-ts-api-key-container" style="display: none; margin-top: 1rem;">
+                                <label>API Key</label>
+                                <input type="password" id="cfg-ts-api-key" placeholder="Enter your secret API key">
+                            </div>
+                        </div>
+
+                        <!-- HOW IT WORKS -->
+                        <div class="card glass-panel" style="grid-column: 1 / -1; margin-bottom: 2rem; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,15,0.8); position: relative;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); position: absolute; top: -10px; left: 20px; background: var(--bg-dark); padding: 0 5px;">How it works</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--accent-2); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">1</div>
+                                <div><strong style="font-size: 0.9rem;">Upload File</strong><br><span style="font-size: 0.75rem; color: var(--text-muted);">Add your audio or video file</span></div>
+                            </div>
+                            <span style="color: var(--text-muted);">→</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">2</div>
+                                <div><strong style="font-size: 0.9rem;">AI Processing</strong><br><span style="font-size: 0.75rem; color: var(--text-muted);">Our AI analyzes and transcribes</span></div>
+                            </div>
+                            <span style="color: var(--text-muted);">→</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">3</div>
+                                <div><strong style="font-size: 0.9rem;">Review & Export</strong><br><span style="font-size: 0.75rem; color: var(--text-muted);">Edit and export your results</span></div>
+                            </div>
+                        </div>
+
+                        <!-- TRANSCRIPTION RESULTS -->
+                        <div class="card glass-panel" style="grid-column: 1 / -1; padding: 1.5rem; display: flex; flex-direction: column;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <h2 class="card-title" style="margin: 0; font-size: 1.2rem;">Transcription Results</h2>
+                                    <span style="font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); text-transform: uppercase;">RESTORED DRAFT</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">📋 Copy Text</button>
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">⬇ .TXT</button>
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">⬇ .SRT</button>
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">↔ Reformat Timecodes</button>
+                                </div>
+                            </div>
+                            
+                            <textarea id="ts-result-text" placeholder="Your transcription will appear here..." style="width: 100%; min-height: 300px; background: rgba(5,5,8,0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; color: white; padding: 1rem; font-family: monospace; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; outline: none;"></textarea>
+                            
+                            <button style="width: 100%; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); color: var(--accent-2); padding: 12px; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;">
+                                <span>🎬 Send Directly to Cipher Studio Captions</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CSS script for the toggle switch to animate correctly -->
+                    <style>
+                        #cfg-ts-speaker:checked + span { background-color: var(--accent-1); }
+                        #cfg-ts-speaker:checked + span + span { transform: translateX(20px); }
+                        
+                        /* Make display: contents behave correctly for config panels */
+                        #config-transcriber { display: none; }
+                        #config-transcriber:not(.hidden) { display: contents; }
+                    </style>
+    <link rel="stylesheet" href="autocut.css?v=1789908707">
+                    <script>
+                        // API Key field visibility toggle
+                        setTimeout(() => {
+                            const providerSelect = document.getElementById('cfg-ts-api-provider');
+                            const keyContainer = document.getElementById('cfg-ts-api-key-container');
+                            if(providerSelect) {
+                                providerSelect.addEventListener('change', (e) => {
+                                    if(e.target.value === 'local') keyContainer.style.display = 'none';
+                                    else keyContainer.style.display = 'block';
+                                });
+                            }
+                        }, 1000);
+                    </script>
+
+                    <!-- AUTO CAPTIONS SETTINGS -->
+                    <div id="config-autocaptions" class="hidden">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Auto Caption Generator</h2>
+                            <div class="grid-2-col">
+                                <div class="input-group">
+                                    <label>Caption Style</label>
+                                    <select id="cfg-captions-style">
+                                        <option value="karaoke" selected>Karaoke Pop (Word by word)</option>
+                                        <option value="static">Static Block (Classic)</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Lines per Screen</label>
+                                    <select id="cfg-captions-lines">
+                                        <option value="1" selected>1 Line</option>
+                                        <option value="2">2 Lines</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" style="grid-column: span 2;">
+                                    <label>Font Size</label>
+                                    <input type="number" id="cfg-captions-fontsize" value="65">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIRAL SCRIPT WRITER -->
+                    <div id="config-scriptwriter" class="hidden" style="display: contents;">
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 1rem 0 2rem 0;">
+                            <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">Your channel's own <span style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">script-writing brain.</span></h1>
+                            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.5;">Cipher AI Writer learns storytelling from established channels in your niche, mines their most viral topics, and writes ready-to-record scripts — daily, on autopilot.</p>
+                        </div>
+
+                        <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                            <div class="card glass-panel" style="padding: 1.5rem;">
+                                <h4 style="color: var(--accent-2); font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 0.5rem; text-transform: uppercase;">STEP 1</h4>
+                                <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Pick a niche</h3>
+                                <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">Choose History, True Crime or Documentaries below — or add your own channels. Ready in 30 seconds.</p>
+                            </div>
+                            <div class="card glass-panel" style="padding: 1.5rem;">
+                                <h4 style="color: var(--accent-2); font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 0.5rem; text-transform: uppercase;">STEP 2</h4>
+                                <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Press Write Scripts</h3>
+                                <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">The AI picks a proven viral topic and writes a complete voice-over — clean text, ready to record.</p>
+                            </div>
+                            <div class="card glass-panel" style="padding: 1.5rem;">
+                                <h4 style="color: var(--accent-2); font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 0.5rem; text-transform: uppercase;">STEP 3</h4>
+                                <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Copy & record</h3>
+                                <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">Hit 📋 Copy and paste straight into your voice-over tool. Autopilot writes fresh ones daily.</p>
+                            </div>
+                        </div>
+
+                        <div style="grid-column: 1 / -1; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
+                            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;">
+                                <span>🎬</span> Start: Investigative Documentaries
+                            </button>
+                            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;">
+                                <span>🏛️</span> Start: History Documentaries
+                            </button>
+                            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;">
+                                <span>🎭</span> Start: True Crime
+                            </button>
+                            <button style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); border: none; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(139,92,246,0.3); transition: 0.2s;">
+                                <span>+</span> Custom niche
+                            </button>
+                        </div>
+                        
+                        <div class="card glass-panel" style="margin-top: 2rem;">
+                            <h2 class="card-title">LLM API Settings</h2>
+                            <div class="input-group">
+                                <label>Provider (OpenAI / Groq / Anthropic)</label>
+                                <select id="cfg-sw-api-provider">
+                                    <option value="groq" selected>Groq (Ultra-fast Llama-3)</option>
+                                    <option value="openai">OpenAI (GPT-4o)</option>
+                                    <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin-top: 1rem;">
+                                <label>API Key</label>
+                                <input type="password" id="cfg-sw-api-key" placeholder="Enter your LLM API Key">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROMPT GENERATOR -->
+                    <div id="config-promptgenerator" class="hidden">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Visual Prompt Generator</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Generate prompts based on your video context.</p>
+                            <div class="input-group">
+                                <label>Art Style</label>
+                                <select id="cfg-prompt-style">
+                                    <option value="cinematic">Cinematic 4K</option>
+                                    <option value="anime">Anime / Manga</option>
+                                    <option value="cyberpunk">Cyberpunk Neon</option>
+                                    <option value="minimalist">Minimalist Vector</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CIPHER PRO -->
+                    <div id="config-autocutpro" class="hidden">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Cipher Studio PRO</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Auto-sync images to audio with transitions.</p>
+                            <div class="grid-2-col">
+                                <div class="input-group">
+                                    <label>Default Transition</label>
+                                    <select id="cfg-pro-transition">
+                                        <option value="fade">Fade</option>
+                                        <option value="zoom">Zoom In</option>
+                                        <option value="slide">Slide Left</option>
+                                        <option value="random">Random</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Atmospheric FX</label>
+                                    <select id="cfg-pro-fx">
+                                        <option value="none">None</option>
+                                        <option value="particles">Particles</option>
+                                        <option value="fog">Fog</option>
+                                        <option value="vhs">VHS Glitch</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BULK IMAGE GENERATOR -->
+                    <div id="config-bulkimage" class="hidden">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Bulk Image Gen</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Generate scene images in bulk using AI.</p>
+                            <div class="input-group">
+                                <label>Batch Size</label>
+                                <input type="number" id="cfg-bulk-batch" value="10">
+                            </div>
+                            <div class="input-group">
+                                <label>API Provider</label>
+                                <select id="cfg-bulk-api">
+                                    <option value="gemini">Google Gemini</option>
+                                    <option value="openai">OpenAI DALL-E 3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- MANUAL CUT SETTINGS -->
+                    <div id="config-manual" class="hidden" style="display: contents;">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Manual Timestamps (Per Video)</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">
+                                Enter timestamps to extract specific clips from the queued videos. <br>
+                                Format: <code>MM:SS-MM:SS</code> (e.g. <code>01:10-02:00, 00:05-00:30</code>)
+                            </p>
+                            <div id="manual-timestamps-list" style="display: flex; flex-direction: column; gap: 0.8rem; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                                <div class="text-muted text-center" style="padding: 2rem;">Add videos to queue to set timestamps.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WATERMARK SETTINGS -->
+                    <div id="config-watermark" class="hidden" style="display: contents;">
+                        <div class="card glass-panel">
+                            <h2 class="card-title">Watermark Settings (Up to 3)</h2>
+                            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">
+                                Select up to 3 logos to overlay on your videos. Processing will apply these logos to the full length of the videos.
+                            </p>
+                            <div id="watermark-logos-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Logo 1 -->
+                                <div class="watermark-logo-item" style="padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <strong style="color: var(--accent-1);">Logo 1</strong>
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <button id="select-logo-btn-1" class="btn-action btn-select-logo" data-logo-index="1" style="padding: 5px 10px; font-size: 0.8rem;">Select Logo</button>
+                                            <span id="logo-path-display-1" class="text-muted" style="font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">None</span>
+                                            <button class="btn-remove-item btn-clear-logo" data-logo-index="1" style="width:24px;height:24px;font-size:0.8rem;display:none;">✕</button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-col">
+                                        <div class="input-group">
+                                            <label>Position</label>
+                                            <select id="cfg-logo-pos-1" class="input-modern" style="width: 100%;">
+                                                <option value="top_right">Top Right</option>
+                                                <option value="top_left">Top Left</option>
+                                                <option value="bottom_right">Bottom Right</option>
+                                                <option value="bottom_left">Bottom Left</option>
+                                                <option value="center">Center</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <label style="display: flex; justify-content: space-between;">Size <span id="logo-size-val-1" style="color: var(--accent-1);">150px</span></label>
+                                            <input type="range" id="cfg-logo-size-1" min="50" max="500" value="150" step="10" oninput="document.getElementById('logo-size-val-1').innerText = this.value + 'px'" style="width: 100%;">
+                                        </div>
+                                        <div class="input-group" style="grid-column: span 2;">
+                                            <label style="display: flex; justify-content: space-between;">Opacity <span id="logo-opacity-val-1" style="color: var(--accent-1);">80%</span></label>
+                                            <input type="range" id="cfg-logo-opacity-1" min="10" max="100" value="80" step="5" oninput="document.getElementById('logo-opacity-val-1').innerText = this.value + '%'" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Logo 2 -->
+                                <div class="watermark-logo-item" style="padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <strong style="color: var(--accent-1);">Logo 2</strong>
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <button id="select-logo-btn-2" class="btn-action btn-select-logo" data-logo-index="2" style="padding: 5px 10px; font-size: 0.8rem;">Select Logo</button>
+                                            <span id="logo-path-display-2" class="text-muted" style="font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">None</span>
+                                            <button class="btn-remove-item btn-clear-logo" data-logo-index="2" style="width:24px;height:24px;font-size:0.8rem;display:none;">✕</button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-col">
+                                        <div class="input-group">
+                                            <label>Position</label>
+                                            <select id="cfg-logo-pos-2" class="input-modern" style="width: 100%;">
+                                                <option value="top_right">Top Right</option>
+                                                <option value="top_left" selected>Top Left</option>
+                                                <option value="bottom_right">Bottom Right</option>
+                                                <option value="bottom_left">Bottom Left</option>
+                                                <option value="center">Center</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <label style="display: flex; justify-content: space-between;">Size <span id="logo-size-val-2" style="color: var(--accent-1);">150px</span></label>
+                                            <input type="range" id="cfg-logo-size-2" min="50" max="500" value="150" step="10" oninput="document.getElementById('logo-size-val-2').innerText = this.value + 'px'" style="width: 100%;">
+                                        </div>
+                                        <div class="input-group" style="grid-column: span 2;">
+                                            <label style="display: flex; justify-content: space-between;">Opacity <span id="logo-opacity-val-2" style="color: var(--accent-1);">80%</span></label>
+                                            <input type="range" id="cfg-logo-opacity-2" min="10" max="100" value="80" step="5" oninput="document.getElementById('logo-opacity-val-2').innerText = this.value + '%'" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Logo 3 -->
+                                <div class="watermark-logo-item" style="padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <strong style="color: var(--accent-1);">Logo 3</strong>
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <button id="select-logo-btn-3" class="btn-action btn-select-logo" data-logo-index="3" style="padding: 5px 10px; font-size: 0.8rem;">Select Logo</button>
+                                            <span id="logo-path-display-3" class="text-muted" style="font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">None</span>
+                                            <button class="btn-remove-item btn-clear-logo" data-logo-index="3" style="width:24px;height:24px;font-size:0.8rem;display:none;">✕</button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-col">
+                                        <div class="input-group">
+                                            <label>Position</label>
+                                            <select id="cfg-logo-pos-3" class="input-modern" style="width: 100%;">
+                                                <option value="top_right">Top Right</option>
+                                                <option value="top_left">Top Left</option>
+                                                <option value="bottom_right">Bottom Right</option>
+                                                <option value="bottom_left">Bottom Left</option>
+                                                <option value="center" selected>Center</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <label style="display: flex; justify-content: space-between;">Size <span id="logo-size-val-3" style="color: var(--accent-1);">150px</span></label>
+                                            <input type="range" id="cfg-logo-size-3" min="50" max="500" value="150" step="10" oninput="document.getElementById('logo-size-val-3').innerText = this.value + 'px'" style="width: 100%;">
+                                        </div>
+                                        <div class="input-group" style="grid-column: span 2;">
+                                            <label style="display: flex; justify-content: space-between;">Opacity <span id="logo-opacity-val-3" style="color: var(--accent-1);">80%</span></label>
+                                            <input type="range" id="cfg-logo-opacity-3" min="10" max="100" value="80" step="5" oninput="document.getElementById('logo-opacity-val-3').innerText = this.value + '%'" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- GLOBAL PRO SETTINGS -->
+                    <div class="card glass-panel pro-card">
+                        <h2 class="card-title" style="color: var(--accent-3);">Advanced Pro Filters</h2>
+                        <p class="pro-warning">⚠ Note: These filters require high-quality re-encoding (Slower)</p>
+                        
+                        <div class="toggle-group">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="cfg-vertical">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <h4>Vertical Crop (9:16)</h4>
+                                <p>Perfectly centered for TikTok/Shorts</p>
+                            </div>
+                        </div>
+                        
+                        <div class="toggle-group">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="cfg-normalize">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <h4>Audio Normalization</h4>
+                                <p>Consistent studio-level volume</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- VIDEO PLAYER MODAL -->
+    <div id="video-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-panel" style="width: 800px; max-width: 90vw;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 id="video-modal-title" style="margin: 0; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">Video Title</h3>
+                <button id="close-video-modal" class="btn-back" style="background: rgba(255,50,50,0.1); color: #ff5555; border-color: rgba(255,50,50,0.3); padding: 5px 12px;">Close</button>
+            </div>
+            
+            <div class="video-container" style="background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; position: relative;">
+                <video id="preview-video" controls style="width: 100%; height: auto; max-height: 50vh; display: block;"></video>
+            </div>
+
+            <div class="video-controls" style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px; flex: 1;">
+                    <button id="btn-set-start" class="btn-action" style="flex: 1; border-color: var(--accent-1); color: var(--accent-1);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        Set Start Time
+                    </button>
+                    <button id="btn-set-end" class="btn-action" style="flex: 1; border-color: var(--accent-2); color: var(--accent-2);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                        Set End Time
+                    </button>
+                </div>
+                <div style="flex: 1; display: flex; align-items: center; gap: 10px; justify-content: flex-end;">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Current Timestamp:</span>
+                    <input type="text" id="live-timestamp-preview" class="input-modern" readonly style="width: 150px; text-align: center; font-weight: bold; font-family: monospace; cursor: default; user-select: text;" placeholder="00:00 - 00:00">
+                    <button id="btn-add-clip" class="btn-generate glow-button" style="padding: 10px 15px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; height: 100%;">Add Clip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLETION MODAL -->
+    <div id="completion-modal" class="modal-overlay hidden" style="z-index: 9999;">
+        <div class="modal-content glass-panel text-center" style="width: 450px; max-width: 90vw; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div id="completion-icon" style="font-size: 4.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.5));">✅</div>
+            <h2 id="completion-title" class="gradient-text" style="font-size: 2.2rem; margin-bottom: 0.5rem;">Success!</h2>
+            <p id="completion-message" class="text-muted" style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.5;">Your videos have been processed successfully.</p>
+            <div class="action-buttons" style="display: flex; justify-content: center; gap: 1rem; width: 100%;">
+                <button id="completion-close-btn" class="btn-action" style="flex: 1;">Close</button>
+                <button id="completion-folder-btn" class="btn-generate glow-button" style="flex: 1;">📂 Open Output</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=1789908707"></script>
+
+<div id="view-transcriber" class="screen hub-screen-view">
+  <div class="studio-container tool-workbench-container transcriber-workbench-container">
+    
+    <!-- Top Header Bar -->
+    <div class="transcriber-top-header">
+      <button class="btn-back-to-hub btn-transcriber-back" type="button">← Back to Dashboard</button>
+      <div class="transcriber-header-title-group">
+        <span class="transcriber-header-icon">🎙️</span>
+        <div>
+          <h2>AI Audio Transcriber</h2>
+          <p class="transcriber-header-sub">Transcribe audio to text with AI precision</p>
+        </div>
+      </div>
+      <div class="transcriber-header-right">
+        <span class="badge-suite-pro">Cipher Studio by Team Cipher <span class="badge-pro-pill">PRO</span></span>
+      </div>
+    </div>
+
+    <!-- 3-Column Studio Suite Layout -->
+    <div class="transcriber-suite-layout">
+      
+      <!-- Column 1: Left Navigation Dock -->
+      <aside class="transcriber-left-dock">
+        <nav class="transcriber-nav-menu">
+          <button class="transcriber-nav-item active" id="tab-nav-transcribe" type="button">
+            <span class="nav-item-icon">📝</span>
+            <span class="nav-item-label">Transcribe</span>
+          </button>
+          <button class="transcriber-nav-item" id="tab-nav-files" type="button">
+            <span class="nav-item-icon">📁</span>
+            <span class="nav-item-label">Files</span>
+          </button>
+          <button class="transcriber-nav-item" id="tab-nav-history" type="button">
+            <span class="nav-item-icon">⏱️</span>
+            <span class="nav-item-label">History</span>
+          </button>
+          <button class="transcriber-nav-item" id="tab-nav-templates" type="button">
+            <span class="nav-item-icon">📋</span>
+            <span class="nav-item-label">Templates</span>
+          </button>
+          <button class="transcriber-nav-item btn-open-ai-settings" type="button">
+            <span class="nav-item-icon">⚙️</span>
+            <span class="nav-item-label">Settings</span>
+          </button>
+        </nav>
+
+        <div class="transcriber-dock-footer">
+          <!-- Whisper Large Model Badge -->
+          <div class="transcriber-status-card">
+            <div class="status-card-icon">🎙️</div>
+            <div class="status-card-body">
+              <span class="status-card-title">Whisper Large v3</span>
+              <span class="status-card-sub">AI Model</span>
+              <span class="status-card-tag tag-green">High Accuracy</span>
+            </div>
+          </div>
+
+          <!-- Speed Badge -->
+          <div class="transcriber-status-card">
+            <div class="status-card-icon speed-bolt">⚡</div>
+            <div class="status-card-body">
+              <span class="status-card-title">3-Sec Speed</span>
+              <span class="status-card-sub">Processing Speed</span>
+            </div>
+          </div>
+
+          <!-- Help Center -->
+          <div class="transcriber-help-card" id="btn-transcriber-help">
+            <span class="help-icon">❓</span>
+            <span class="help-label">Help Center</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Column 2: Center Main Stage -->
+      <main class="transcriber-center-stage">
+        
+        <!-- SUBVIEW 1: Main Transcribe Workbench -->
+        <div id="transcriber-view-main" class="transcriber-tab-pane active">
+          
+          <!-- Inline API Key Banner -->
+          <div class="ai-key-inline-banner mb-3" id="transcriber-key-banner" style="display: none;">
+            <div class="inline-key-header">
+              <span class="key-label">🔑 Groq API Key Required for instant 3-second transcription</span>
+              <button class="btn-open-ai-settings key-link-btn" type="button">Open Settings</button>
+            </div>
+            <div class="inline-key-input-row">
+              <input type="password" id="transcriber-inline-key-input" placeholder="Paste Groq Key (gsk_...)" />
+              <button id="btn-save-inline-groq-key" class="btn-save-key" type="button">Save Key</button>
+            </div>
+          </div>
+
+          <!-- 1. Dropzone Box -->
+          <div class="transcriber-drop-box" id="transcriber-drop-area">
+            <div class="drop-mic-circle">
+              <svg class="mic-svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </div>
+            <p class="drop-headline">Drop your audio or video file here</p>
+            <p class="drop-formats">Supports: MP3, WAV, M4A, MP4, MOV, AVI (Max 2GB)</p>
+            <button class="btn-browse-files" id="btn-transcriber-browse" type="button">
+              <span>📁</span> Browse Files
+            </button>
+            <input type="file" id="transcriber-file-input" accept=".flac,.mp3,.mp4,.mpeg,.mpga,.m4a,.ogg,.wav,.webm,audio/flac,audio/mpeg,audio/mp4,audio/ogg,audio/wav,video/mp4,video/webm" hidden />
+          </div>
+
+          <!-- 2. Loaded Media Card (Waveform + Play/Pause) -->
+          <div class="transcriber-media-card hidden" id="transcriber-loaded-card">
+            <div class="media-card-top-row">
+              <div class="media-file-meta">
+                <div class="media-icon-badge">🎵</div>
+                <div class="media-file-text">
+                  <span class="media-title-text" id="transcriber-filename">voiceover.mp3</span>
+                  <span class="media-sub-text"><span id="transcriber-filesize">-- MB</span> • <span id="transcriber-duration">00:00:00</span></span>
+                </div>
+              </div>
+              <!-- Waveform Canvas -->
+              <div class="media-waveform-wrap">
+                <canvas id="transcriber-waveform-canvas" width="360" height="38"></canvas>
+              </div>
+              <!-- Play/Pause Toggle -->
+              <button class="btn-waveform-play" id="btn-transcriber-play" type="button" title="Play / Pause Audio">▶</button>
+              <audio id="transcriber-audio-preview" style="display: none;"></audio>
+            </div>
+
+            <label class="enhance-audio-checkbox">
+              <input type="checkbox" id="chk-enhance-audio" checked />
+              <span class="chk-custom"></span>
+              <span class="chk-label-text">Audio cleanup</span>
+              <span class="badge-recommended">Coming soon</span>
+            </label>
+          </div>
+
+          <!-- 3. Transcription Settings Grid -->
+          <div class="transcriber-settings-card">
+            <h4 class="settings-card-title">Transcription Settings</h4>
+            <div class="transcriber-settings-grid">
+              
+              <!-- Language -->
+              <div class="setting-item-box">
+                <label><span class="item-icon">🌐</span> Language</label>
+                <select id="sel-transcribe-lang" class="transcriber-select">
+                  <option value="auto" selected>Auto Detect</option>
+                  <option value="en">English</option>
+                  <option value="ur">Urdu (اردو)</option>
+                  <option value="hi">Hindi (हिन्दी)</option>
+                  <option value="es">Spanish</option>
+                  <option value="ar">Arabic</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                </select>
+              </div>
+
+              <!-- Output Format -->
+              <div class="setting-item-box">
+                <label><span class="item-icon">📄</span> Output Format</label>
+                <select id="sel-transcribe-format" class="transcriber-select">
+                  <option value="timestamped" selected>Timestamped Transcript (Recommended)</option>
+                  <option value="srt">SRT Subtitles</option>
+                  <option value="vtt">VTT</option>
+                  <option value="txt">TXT (Plain Text)</option>
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+
+              <!-- Timestamp Style -->
+              <div class="setting-item-box">
+                <label><span class="item-icon">⏱️</span> Timestamp Style</label>
+                <select id="sel-transcribe-timestamps" class="transcriber-select">
+                  <option value="word" selected>Word Timestamps</option>
+                  <option value="segment">Segment Timestamps</option>
+                  <option value="none">No Timestamps</option>
+                </select>
+              </div>
+
+              <!-- Cue Length -->
+              <div class="setting-item-box" id="transcriber-cue-length-box">
+                <label><span class="item-icon">↔️</span> Words per Timecode</label>
+                <div class="transcriber-cue-length-controls">
+                  <select id="sel-transcribe-cue-length" class="transcriber-select">
+                    <option value="4">Short — up to 4 words</option>
+                    <option value="8" selected>Medium — up to 8 words</option>
+                    <option value="14">Long — up to 14 words</option>
+                    <option value="custom">Custom limit</option>
+                  </select>
+                  <input id="input-transcribe-words-per-cue" class="transcriber-number-input hidden" type="number" min="3" max="25" step="1" value="8" aria-label="Maximum words per timecode" />
+                </div>
+                <small class="transcriber-setting-help">Uses each word's original AI timestamp; punctuation may end a line earlier.</small>
+              </div>
+
+              <!-- Speaker Detection -->
+              <div class="setting-item-box setting-switch-box">
+                <label><span class="item-icon">🗣️</span> Speaker Detection <small>(requires diarization)</small></label>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="chk-speaker-detection" />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- More Settings Collapsible -->
+            <details class="transcriber-more-settings">
+              <summary>⚙️ More Settings</summary>
+              <div class="more-settings-body">
+                <div class="field-group">
+                  <label>Custom Vocabulary Prompt (Optional):</label>
+                  <input type="text" id="input-transcribe-prompt" placeholder="e.g. Brand names, technical acronyms, specialized terms" />
+                </div>
+                <div class="field-group">
+                  <label>Maximum Timecode Duration:</label>
+                  <select id="sel-transcribe-max-cue-duration">
+                    <option value="3">3 seconds</option>
+                    <option value="6" selected>6 seconds (Recommended)</option>
+                    <option value="10">10 seconds</option>
+                    <option value="0">No duration limit</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- 4. Primary Action Button -->
+          <button class="btn-start-transcription-suite" id="btn-start-transcribe" disabled>
+            <span class="btn-bolt">⚡</span>
+            <span class="btn-label-text">Start Transcription</span>
+          </button>
+          <p class="estimated-time-text">Estimated time: ~3 to 5 seconds</p>
+
+          <!-- 5. How it works Steps -->
+          <div class="transcriber-how-it-works">
+            <span class="how-title">How it works</span>
+            <div class="how-steps-row">
+              <div class="how-step-item">
+                <span class="step-num step-active">1</span>
+                <div class="step-desc">
+                  <strong>Upload File</strong>
+                  <span>Add your audio or video file</span>
+                </div>
+              </div>
+              <span class="step-arrow">→</span>
+              <div class="how-step-item">
+                <span class="step-num">2</span>
+                <div class="step-desc">
+                  <strong>AI Processing</strong>
+                  <span>Our AI analyzes and transcribes</span>
+                </div>
+              </div>
+              <span class="step-arrow">→</span>
+              <div class="how-step-item">
+                <span class="step-num">3</span>
+                <div class="step-desc">
+                  <strong>Review &amp; Export</strong>
+                  <span>Edit and export your results</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Completed Transcription Output Card -->
+          <div class="workbench-card hidden mt-6" id="transcriber-result-box">
+            <div class="workbench-header-flex">
+              <div class="output-title-group">
+                <h3 class="workbench-title">Transcription Results</h3>
+                <span class="badge-opt" id="transcriber-output-badge">SRT Format</span>
+              </div>
+              <div class="workbench-actions">
+                <button class="btn-tool-action" id="btn-copy-transcription" type="button">📋 Copy Text</button>
+                <button class="btn-tool-action" id="btn-download-transcription-txt" type="button">⬇️ .TXT</button>
+                <button class="btn-tool-action" id="btn-download-transcription-srt" type="button">⬇️ .SRT</button>
+                <button class="btn-tool-action" id="btn-reformat-transcription" type="button" title="Apply the selected cue length without transcribing again">↔️ Reformat Timecodes</button>
+              </div>
+            </div>
+            <textarea id="transcriber-text-output" class="tool-code-textarea" rows="12" spellcheck="false"></textarea>
+            
+            <div class="workbench-footer-send mt-4">
+              <button class="btn-send-highlight" id="btn-send-transcription-studio" type="button">
+                <span>🎬 Send Directly to Cipher Studio Captions</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUBVIEW 2: Files & Media Library -->
+        <div id="transcriber-view-files" class="transcriber-tab-pane hidden">
+          <div class="workbench-card">
+            <div class="workbench-header-flex">
+              <div>
+                <h3 class="workbench-title">📁 Media Library &amp; Files</h3>
+                <p class="workbench-sub">Manage your uploaded audio recordings, podcasts, and video tracks.</p>
+              </div>
+              <button class="btn-tool-action btn-upload-more-files" id="btn-files-tab-upload" type="button">
+                ↑ Upload New Media
+              </button>
+            </div>
+
+            <div class="transcriber-files-grid" id="transcriber-files-list">
+              <!-- Dynamically populated or empty state -->
+              <div class="files-empty-state" id="files-empty-state">
+                <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📂</span>
+                <p style="font-weight: 700; color: #fff;">No media files uploaded yet</p>
+                <p style="font-size: 0.78rem; color: var(--text-dim);">Drop files in the Transcribe tab to build your library.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBVIEW 3: Full History Archive -->
+        <div id="transcriber-view-history" class="transcriber-tab-pane hidden">
+          <div class="workbench-card">
+            <div class="workbench-header-flex">
+              <div>
+                <h3 class="workbench-title">⏱️ Transcription History Archive</h3>
+                <p class="workbench-sub">Review, search, and export all your past audio transcriptions.</p>
+              </div>
+              <button class="btn-tool-action" id="btn-clear-transcriber-history" type="button" style="color: #f87171;">
+                🗑️ Clear History
+              </button>
+            </div>
+
+            <div class="transcriber-full-history-list" id="transcriber-full-history-container">
+              <!-- Dynamically rendered history cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBVIEW 4: Use-Case Templates -->
+        <div id="transcriber-view-templates" class="transcriber-tab-pane hidden">
+          <div class="workbench-card">
+            <div class="workbench-header-flex mb-4">
+              <div>
+                <h3 class="workbench-title">📋 Transcription Use-Case Templates</h3>
+                <p class="workbench-sub">Select a pre-configured template to optimize transcription format, timestamps, and structure.</p>
+              </div>
+            </div>
+
+            <div class="transcriber-templates-grid">
+              
+              <!-- Template 1: Viral Shorts -->
+              <div class="transcriber-template-card" data-template="viral_shorts">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.3)); color: #f472b6;">
+                  📱 Viral TikTok &amp; Reels
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">Short-Form Kinetic Subtitles</h4>
+                  <p class="template-desc">Configures 1-line punchy 4-words/cue format with exact word-level millisecond timestamps for maximum viewer retention.</p>
+                  <div class="template-tags">
+                    <span class="tmpl-tag">Word Timestamps</span>
+                    <span class="tmpl-tag">SRT Format</span>
+                    <span class="tmpl-tag">1-Line Chunker</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+              <!-- Template 2: Podcast & Interview -->
+              <div class="transcriber-template-card" data-template="podcast">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(14,165,233,0.3)); color: #38bdf8;">
+                  🎙️ Podcast &amp; Interview
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">Multi-Speaker Conversation</h4>
+                  <p class="template-desc">Configures segment-based timestamps and clean subtitle formatting for long-form episodes. Speaker labels require a separate diarization service.</p>
+                  <div class="template-tags">
+                  <span class="tmpl-tag">Segment Timing</span>
+                    <span class="tmpl-tag">Segment Timestamps</span>
+                    <span class="tmpl-tag">TXT + SRT</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+              <!-- Template 3: YouTube & Cinema -->
+              <div class="transcriber-template-card" data-template="cinema">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(234,88,12,0.3)); color: #fbbf24;">
+                  🎬 YouTube &amp; Cinema Video
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">Standard 2-Line Video Subtitles</h4>
+                  <p class="template-desc">Broadcast-ready 2-line maximum subtitle formatting adhering to standard 42-characters per line reading guidelines.</p>
+                  <div class="template-tags">
+                    <span class="tmpl-tag">2-Lines Max</span>
+                    <span class="tmpl-tag">SRT Format</span>
+                    <span class="tmpl-tag">Broadcast Safe</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+              <!-- Template 4: Meeting Notes -->
+              <div class="transcriber-template-card" data-template="meeting">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(5,150,105,0.3)); color: #34d399;">
+                  📝 Meeting Minutes &amp; Notes
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">Clean Text Transcript</h4>
+                  <p class="template-desc">Creates a clean plain-text transcript ready for AI summary and action-item workflows.</p>
+                  <div class="template-tags">
+                    <span class="tmpl-tag">Plain TXT</span>
+                    <span class="tmpl-tag">Clean Sentences</span>
+                    <span class="tmpl-tag">No Timecodes</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+              <!-- Template 5: Webinar & Lecture -->
+              <div class="transcriber-template-card" data-template="lecture">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.3)); color: #a78bfa;">
+                  🎓 Webinar &amp; Lecture
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">Educational Master Transcript</h4>
+                  <p class="template-desc">Optimized for specialized terminology and educational courses with WebVTT subtitle formatting.</p>
+                  <div class="template-tags">
+                    <span class="tmpl-tag">WebVTT Format</span>
+                    <span class="tmpl-tag">High Accuracy</span>
+                    <span class="tmpl-tag">Custom Vocab</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+              <!-- Template 6: Global Translation -->
+              <div class="transcriber-template-card" data-template="translation">
+                <div class="template-icon-banner" style="background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(20,184,166,0.3)); color: #22d3ee;">
+                  🌐 Structured Transcript
+                </div>
+                <div class="template-body">
+                  <h4 class="template-title">JSON Timed Structure</h4>
+                  <p class="template-desc">Outputs structured JSON with word and segment timestamps, ideal for multi-language translation and automated pipelines.</p>
+                  <div class="template-tags">
+                    <span class="tmpl-tag">JSON Format</span>
+                    <span class="tmpl-tag">Word Metrics</span>
+                    <span class="tmpl-tag">API Ready</span>
+                  </div>
+                  <button class="btn-apply-template" type="button">⚡ Apply Template</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Column 3: Right Sidebar -->
+      <aside class="transcriber-right-sidebar">
+        
+        <!-- Progress Gauge Card -->
+        <div class="transcriber-sidebar-card progress-gauge-card">
+          <h4 class="sidebar-card-title">Transcription Progress</h4>
+          
+          <div class="circular-progress-wrap">
+            <svg class="progress-ring-svg" width="130" height="130" viewBox="0 0 130 130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="52" stroke-width="8"></circle>
+              <circle class="progress-ring-fill" id="transcriber-progress-circle" cx="65" cy="65" r="52" stroke-width="8" stroke-dasharray="326.72" stroke-dashoffset="326.72"></circle>
+            </svg>
+            <div class="progress-center-text">
+              <span class="progress-pct-number" id="transcriber-progress-pct">0%</span>
+            </div>
+          </div>
+
+          <p class="progress-status-headline" id="transcriber-progress-status">Ready to Transcribe</p>
+          <p class="progress-status-sub" id="transcriber-progress-detail">Upload file and click Start</p>
+
+          <div class="progress-bar-linear">
+            <div class="progress-bar-fill" id="transcriber-progress-linear-fill" style="width: 0%;"></div>
+          </div>
+
+          <div class="progress-timers-row">
+            <span>Elapsed: <strong id="transcriber-timer-elapsed">00:00:00</strong></span>
+            <span>Est: <strong id="transcriber-timer-estimated">00:00:05</strong></span>
+          </div>
+        </div>
+
+        <!-- Quick Tips Card -->
+        <div class="transcriber-sidebar-card quick-tips-card">
+          <h4 class="sidebar-card-title">Quick Tips</h4>
+          <ul class="quick-tips-list">
+            <li>Use high quality audio for better results</li>
+            <li>Speak clearly and avoid background noise</li>
+            <li>Speaker labels require a diarization provider</li>
+            <li>Review and edit after transcription</li>
+          </ul>
+        </div>
+
+        <!-- Recent Transcriptions History Card -->
+        <div class="transcriber-sidebar-card recent-history-card">
+          <div class="sidebar-card-header">
+            <h4 class="sidebar-card-title">Recent Transcriptions</h4>
+          </div>
+          <div class="recent-transcriptions-list" id="transcriber-recent-list">
+            <!-- Dynamically populated or default history items -->
+            <div class="recent-item" data-title="Interview_with_John.mp3">
+              <span class="recent-item-icon">🎵</span>
+              <div class="recent-item-info">
+                <span class="recent-filename">Interview_with_John.mp3</span>
+                <span class="recent-meta">SRT • 2 hours ago</span>
+              </div>
+            </div>
+            <div class="recent-item" data-title="Meeting_Notes.wav">
+              <span class="recent-item-icon">🎵</span>
+              <div class="recent-item-info">
+                <span class="recent-filename">Meeting_Notes.wav</span>
+                <span class="recent-meta">TXT • 5 hours ago</span>
+              </div>
+            </div>
+            <div class="recent-item" data-title="Podcast_Episode_01.mp3">
+              <span class="recent-item-icon">🎵</span>
+              <div class="recent-item-info">
+                <span class="recent-filename">Podcast_Episode_01.mp3</span>
+                <span class="recent-meta">SRT • 1 day ago</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-view-all-history" id="btn-view-all-transcriber-history" type="button">
+            View All History
+          </button>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

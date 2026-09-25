@@ -1,0 +1,17 @@
+{
+  "id": "history",
+  "name": "History Documentaries",
+  "icon": "🏛️",
+  "tagline": "Empires, forgotten events, grand-sweep storytelling",
+  "description": "Faceless narrated history documentaries: 'Entire History of X' epics, essayist deep-dives, and dark forgotten chapters. Teachers are established history storytelling channels; their viral outliers fuel topic ideas.",
+  "lengthKey": "standard",
+  "dailyCount": 1,
+  "teachers": [
+    { "channelId": "UCcJyQ5dihoKAKwk2aRi-CQw", "name": "This Is History" },
+    { "channelId": "UC5Axef4J11DIu17y2RKVqNQ", "name": "The Present Past" },
+    { "channelId": "UCZnTTlJFl3dNLvLHVHeH2iA", "name": "A Day In History" },
+    { "channelId": "UC3l-MBGanXHD3UKJtkaQSAw", "name": "Part-Time Explorer" }
+  ]
+}
+
+

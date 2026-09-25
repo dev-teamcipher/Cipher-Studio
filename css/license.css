@@ -1,0 +1,48 @@
+.license-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(circle at 20% 15%, rgba(73, 51, 202, .32), transparent 38%), rgba(4, 8, 19, .94);
+  backdrop-filter: blur(14px);
+}
+.license-gate.is-hidden { display: none; }
+.license-card {
+  position: relative;
+  width: min(100%, 560px);
+  padding: 38px;
+  border: 1px solid rgba(124, 111, 255, .46);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #111c33, #09111f);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .55);
+  color: #f6f8ff;
+}
+.license-close { position:absolute; top:16px; right:16px; width:36px; height:36px; border:1px solid #344765; border-radius:10px; background:#111d30; color:#dce7f8; cursor:pointer; font-weight:800; }
+.license-close:hover { border-color:#7c6fff; background:#1a2942; }
+.license-mark { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, #6b45f7, #3375f7); margin-bottom: 22px; }
+.license-mark img { width: 40px; height: 40px; object-fit: contain; }
+.license-eyebrow { color: #a995ff; font-size: 11px; font-weight: 800; letter-spacing: .11em; }
+.license-card h1 { margin: 8px 0 10px; color: #fff; font-size: 29px; letter-spacing: -.035em; }
+.license-intro, .license-note { color: #aebbd2; font-size: 13px; line-height: 1.65; }
+.license-intro { margin: 0 0 24px; }
+.license-trial-summary { margin:-10px 0 18px; padding:12px 14px; border:1px solid rgba(52,211,153,.28); border-radius:10px; background:rgba(16,185,129,.08); color:#a7f3d0; font-size:12px; font-weight:700; line-height:1.5; }
+.license-gate.is-expired .license-trial-summary { border-color:rgba(248,113,113,.35); background:rgba(239,68,68,.09); color:#fecaca; }
+.license-note { margin: 18px 0 0; text-align: center; font-size: 11px; }
+.license-label { display: block; margin: 16px 0 7px; color: #cdd7e9; font-size: 12px; font-weight: 700; }
+.license-device-row { display: flex; gap: 8px; }
+.license-input, .license-key-input { box-sizing: border-box; width: 100%; border: 1px solid #31435f; border-radius: 10px; outline: none; background: #07101e; color: #f7f9ff; font: 600 13px/1.45 Consolas, 'Courier New', monospace; }
+.license-input { height: 43px; padding: 0 12px; letter-spacing: .05em; }
+.license-key-input { min-height: 94px; padding: 12px; resize: vertical; letter-spacing: .01em; }
+.license-input:focus, .license-key-input:focus { border-color: #8167ff; box-shadow: 0 0 0 3px rgba(115, 91, 255, .17); }
+.license-copy { flex: 0 0 auto; border: 1px solid #425776; border-radius: 10px; padding: 0 15px; background: #16253c; color: #eaf0ff; font-weight: 700; cursor: pointer; }
+.license-copy:hover { background: #223655; }
+.license-buy-now { width: 100%; min-height: 49px; margin: 0 0 8px; border: 1px solid rgba(251, 191, 36, .72); border-radius: 11px; background: linear-gradient(100deg, #f59e0b, #ef4444); color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 10px 28px rgba(239, 68, 68, .24); }
+.license-buy-now:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.license-activate { width: 100%; min-height: 47px; margin-top: 8px; border: 0; border-radius: 10px; background: linear-gradient(100deg, #6744f5, #2c7af2); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 9px 22px rgba(57, 83, 232, .26); }
+.license-activate:disabled { opacity: .65; cursor: wait; }
+.license-message { min-height: 18px; margin: 10px 0 0; color: #f1b4b4; font-size: 12px; }
+.license-message.success { color: #84e6ad; }
+@media (max-width: 560px) { .license-card { padding: 28px 21px; } .license-gate { padding: 14px; } }

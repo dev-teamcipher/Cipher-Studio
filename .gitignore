@@ -1,0 +1,7 @@
+node_modules/
+temp_render/
+exports/
+transcripts/
+trial-state.dat
+user_settings.json
+.env

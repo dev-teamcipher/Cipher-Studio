@@ -1,0 +1,17 @@
+{
+  "id": "true-crime",
+  "name": "True Crime",
+  "icon": "🕵️",
+  "tagline": "Case-driven mysteries, interrogations, twist reveals",
+  "description": "Faceless narrated true-crime documentaries: interrogation/bodycam analysis, emotional victim-centered cases, and unsolved mysteries. Teachers are established crime storytelling channels; their viral outliers fuel topic ideas.",
+  "lengthKey": "standard",
+  "dailyCount": 1,
+  "teachers": [
+    { "channelId": "UCoV5rqQ-ZwLahX1Q0aEsneA", "name": "STAYAWAKE - Crime & Psychology" },
+    { "channelId": "UCVtHlqfvXn-6m6A2IWUB8MQ", "name": "Unseen" },
+    { "channelId": "UCzhYQIZPJhiiBWQHMSX5MDQ", "name": "JustThoughtLounge" },
+    { "channelId": "UC6SHHgG7Xeh-3g1sUu8Fn3A", "name": "The Missing Enigma" }
+  ]
+}
+
+

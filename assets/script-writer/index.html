@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cipher Studio — Viral AI Script Writer</title>
+<link rel="icon" type="image/png" href="../cipher-studio-icon.svg" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="logo"><img src="../cipher-studio-icon.svg" alt="Cipher Studio" /></div>
+      <div>
+        <h1>CIPHER<span> AI</span> WRITER</h1>
+        <p>Viral Script Intelligence</p>
+      </div>
+    </div>
+    <button class="btn ghost block" id="btnBack" type="button">← &nbsp;Back to Dashboard</button>
+    <button class="btn primary block" id="btnNew">＋ &nbsp;New Niche</button>
+    <div id="nicheList"></div>
+    <div class="side-foot">
+      <div id="connBadges"></div>
+      <button class="btn ghost block" id="btnSettings">⚙ &nbsp;Settings</button>
+      <p class="fineprint"><b>Cipher Studio</b> · v1.0.10</p>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="modal-back" id="modalBack" hidden>
+  <div class="modal" id="modalBox"></div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

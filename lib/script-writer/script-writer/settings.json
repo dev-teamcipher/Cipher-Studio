@@ -1,0 +1,19 @@
+{
+  "nexlev": {
+    "url": "https://prod.dashboard.nexlev.io/api/claude-mcp",
+    "key": "",
+    "oauth": null
+  },
+  "analysis": {
+    "provider": "gemini",
+    "apiKey": "",
+    "baseUrl": "",
+    "model": "gemini-2.5-flash"
+  },
+  "writer": {
+    "provider": "openrouter",
+    "apiKey": "",
+    "baseUrl": "",
+    "model": "claude-sonnet-5"
+  }
+}
