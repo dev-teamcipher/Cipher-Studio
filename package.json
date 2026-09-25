@@ -1,7 +1,7 @@
 {
   "name": "cipher-studio",
-  "version": "1.0.22",
-  "description": "Cipher Studio — Automatic Image to Voiceover Timeline with Camera Motion & Transitions",
+  "version": "1.0",
+  "description": "Cipher Studio \u2014 Automatic Image to Voiceover Timeline with Camera Motion & Transitions",
   "main": "electron-main.js",
   "author": "",
   "license": "ISC",
